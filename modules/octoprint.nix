@@ -15,6 +15,6 @@
       );
     };
     # TODO fix
-    mjpg-streamer.enable = true;
+    # mjpg-streamer.enable = true;
   };
 }
