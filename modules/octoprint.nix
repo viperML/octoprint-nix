@@ -17,6 +17,7 @@
 
     # Octoprint won't bind to port 80
     # Proxy pass with nginx
+    # TODO maybe I should use security.wrappers
     nginx = {
       enable = true;
       recommendedProxySettings = true;

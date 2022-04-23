@@ -19,4 +19,8 @@
       experimental-features = nix-command flakes
     '';
   };
+
+  networking.networkmanager.enable = true;
+  networking.firewall.enable = false;
+  users.groups.networkmanager.members = config.users.groups.wheel.members;
 }
