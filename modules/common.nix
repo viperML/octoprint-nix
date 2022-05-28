@@ -11,6 +11,7 @@
   environment.systemPackages = with pkgs; [
     fish
     htop
+    neofetch
   ];
 
   nix = {

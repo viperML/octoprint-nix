@@ -44,7 +44,7 @@
       ] (system: {
         default = {
           type = "app";
-          program = lib.getExe deploy-rs.packages.${system}.deploy-rs;
+          program = deploy-rs.packages.${system}.deploy-rs.outPath + "/bin/deploy";
         };
       });
 
