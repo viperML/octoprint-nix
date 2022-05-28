@@ -1,34 +1,26 @@
-{
-  config,
-  pkgs,
-  ...
-}: {
+{...}: {
   services = {
     octoprint = {
       enable = true;
-      port = 5000;
-      plugins = (
-        plugins:
-          with plugins; [
-            telegram
-          ]
-      );
+      port = 80;
+      plugins = p: [
+        p.telegram
+      ];
     };
 
-    # Octoprint won't bind to port 80
-    # Proxy pass with nginx
-    # TODO maybe I should use security.wrappers
-    nginx = {
-      enable = true;
-      recommendedProxySettings = true;
-      recommendedOptimisation = true;
-      recommendedGzipSettings = true;
-      # recommendedTlsSettings = true;
-      virtualHosts."raspi.local" = {
-        locations."/".proxyPass = "http://localhost:5000/";
-      };
-    };
     # TODO video output
     # mjpg-streamer.enable = true;
+  };
+
+  systemd.services.octoprint = {
+    serviceConfig = {
+      AmbientCapabilities = "CAP_NET_BIND_SERVICE";
+      CapabilityBoundingSet = "CAP_NET_BIND_SERVICE";
+    };
+  };
+
+  networking.firewall = rec {
+    allowedTCPPorts = [80];
+    allowedUDPPorts = allowedTCPPorts;
   };
 }
