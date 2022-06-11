@@ -24,4 +24,9 @@
 
   networking.networkmanager.enable = true;
   users.groups.networkmanager.members = config.users.groups.wheel.members;
+
+  # https://github.com/jacksonliam/mjpg-streamer/issues/182#issuecomment-860181361
+  boot.loader.raspberryPi.firmwareConfig = ''
+    gpu_mem=256
+  '';
 }
