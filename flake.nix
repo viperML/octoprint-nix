@@ -15,6 +15,7 @@
     deploy-rs,
   }: let
     inherit (nixpkgs) lib;
+    genSystems = lib.genAttrs lib.systems.flakeExposed;
   in {
     nixosConfigurations.raspi = nixpkgs.lib.nixosSystem {
       system = "aarch64-linux";
@@ -27,26 +28,14 @@
       ];
     };
 
-    # Default targets for "nix build"
-    packages =
-      lib.genAttrs [
-        "x86_64-linux" # Compile image in QEMU-user with binfmt
-        "aarch64-linux" # Compile in a native (or virtualized) system
-      ] (system: {
-        default = self.nixosConfigurations.raspi.config.system.build.sdImage;
-      });
+    packages."aarch64-linux".default = self.nixosConfigurations.raspi.config.system.build.sdImage;
 
-    # Default targets for "nix run"
-    apps =
-      lib.genAttrs [
-        "x86_64-linux"
-        "aarch64-linux"
-      ] (system: {
-        default = {
-          type = "app";
-          program = deploy-rs.packages.${system}.deploy-rs.outPath + "/bin/deploy";
-        };
-      });
+    apps = genSystems (system: {
+      default = {
+        type = "app";
+        program = deploy-rs.packages.${system}.deploy-rs.outPath + "/bin/deploy";
+      };
+    });
 
     deploy.nodes.raspi = {
       hostname = "raspi";
